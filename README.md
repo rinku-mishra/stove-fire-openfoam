@@ -1,6 +1,6 @@
 # stove-fire-openfoam
 
-3D OpenFOAM simulation of a wood fire inside a Wiking Miro 3 stove at nominal burn
+3D OpenFOAM simulation of a wood fire inside a stove at nominal burn
 (4.9 kW). The flame, the hot gas path around the baffle and the heat leaving through
 the glass, the lining and the chimney are all resolved in time.
 
