@@ -1,0 +1,5 @@
+FoamFile { version 2.0; format ascii; class dictionary; object boundaryRadiationProperties; }
+"(walls|baffle|logs|fuel)" { type lookup; emissivity 0.9; transmissivity 0; }   // vermiculite, wood/char
+"(steel|collar)"           { type lookup; emissivity 0.8; transmissivity 0; }   // sooted steel
+// clean ceramic glass and the openings: radiation reaching them leaves the firebox
+"(glass|sideGlass.*|airwash|primary|tertiary|flue)" { type lookup; emissivity 1; transmissivity 0; }

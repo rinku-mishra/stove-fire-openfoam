@@ -1,0 +1,41 @@
+FoamFile { version 2.0; format ascii; class volScalarField; object T; }
+#include "$FOAM_CASE/system/caseParams"
+dimensions [0 0 0 1 0 0 0];
+internalField uniform $T_room;
+boundaryField
+{
+    // vermiculite plates on the steel body: steady 1D conduction to the room,
+    // absorbed radiation (qr) included
+    walls
+    {
+        type externalWallHeatFluxTemperature; mode coefficient;
+        Ta uniform $T_room; h uniform $h_out;
+        thicknessLayers ($t_verm $t_steel); kappaLayers ($k_verm $k_steel);
+        qr qr; qrRelaxation 1; relaxation 0.003; kappaMethod fluidThermo; value uniform $T_room;
+    }
+    "(steel|collar)"    // bare steel above the lining, door frame, deflector bar, collar
+    {
+        type externalWallHeatFluxTemperature; mode coefficient;
+        Ta uniform $T_room; h uniform $h_out;
+        thicknessLayers ($t_steel); kappaLayers ($k_steel);
+        qr qr; qrRelaxation 1; relaxation 0.003; kappaMethod fluidThermo; value uniform $T_room;
+    }
+    // ceramic glass: radiation reaching it leaves the firebox (emissivity 1 in
+    // boundaryRadiationProperties; it also emits back at its own temperature), and only
+    // convection sets its temperature (no qr here)
+    "(glass|sideGlass.*)"
+    {
+        type externalWallHeatFluxTemperature; mode coefficient;
+        Ta uniform $T_room; h uniform $h_glass;
+        thicknessLayers ($t_glass); kappaLayers ($k_glass);
+        relaxation 0.05; kappaMethod fluidThermo; value uniform $T_room;
+    }
+    // vermiculite baffle, gas on both sides: held at its radiative-equilibrium temperature,
+    // face by face, read from constant/boundaryData/baffle (computed from an earlier run).
+    // A coupled radiative-equilibrium wall is numerically unstable with the explicit
+    // radiation coupling.
+    baffle { type timeVaryingMappedFixedValue; mapMethod nearest; offset 0; setAverage false; value uniform 640; }
+    "(logs|fuel)" { type fixedValue; value uniform $T_fuel; }
+    "(airwash|primary|tertiary)" { type fixedValue; value uniform $T_air; }
+    flue { type inletOutlet; inletValue uniform $T_room; value uniform $T_room; }
+}

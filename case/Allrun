@@ -1,0 +1,19 @@
+#!/bin/sh
+# Wiking Miro 3 fire at nominal burn (fireFoam LES).
+# Usage: ./Allrun [-np 2]     cell size: dx in system/blockMeshDict
+cd "${0%/*}" || exit
+. "${WM_PROJECT_DIR:?}"/bin/tools/RunFunctions
+np=2
+[ "$1" = "-np" ] && np=$2
+
+runApplication blockMesh
+runApplication surfaceFeatureExtract
+runApplication snappyHexMesh -overwrite
+runApplication topoSet
+runApplication createPatch -overwrite
+runApplication checkMesh
+restore0Dir
+foamDictionary -entry numberOfSubdomains -set "$np" system/decomposeParDict > /dev/null 2>&1
+runApplication decomposePar -force
+runParallel fireFoam
+runApplication reconstructPar -fields '(T U Qdot)'

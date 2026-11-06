@@ -1,0 +1,26 @@
+FoamFile { version 2.0; format ascii; class dictionary; object blockMeshDict; }
+// Background mesh for snappyHexMesh. Set the cell size here:
+// 0.0075 (default, ~113k cells) or 0.01 (~4x faster).
+dx      0.0075;
+
+// Box around the firebox, shifted by 0.23 cell so that no geometry plane
+// coincides with a background face.
+o       #eval{ 0.23*$dx };
+x0      #eval{ -0.176 - $dx - $o };
+y0      #eval{ -$dx - $o };
+z0      #eval{ -$dx - $o };
+nx      #eval{ ceil((0.176 + $dx - $x0)/$dx) };
+ny      #eval{ ceil((0.48 + $dx - $y0)/$dx) };
+nz      #eval{ ceil((0.585 + $dx - $z0)/$dx) };
+x1      #eval{ $x0 + $nx*$dx };
+y1      #eval{ $y0 + $ny*$dx };
+z1      #eval{ $z0 + $nz*$dx };
+
+scale 1;
+vertices
+(
+    ($x0 $y0 $z0) ($x1 $y0 $z0) ($x1 $y1 $z0) ($x0 $y1 $z0)
+    ($x0 $y0 $z1) ($x1 $y0 $z1) ($x1 $y1 $z1) ($x0 $y1 $z1)
+);
+blocks ( hex (0 1 2 3 4 5 6 7) ($nx $ny $nz) simpleGrading (1 1 1) );
+boundary ( background { type patch; faces ((0 3 2 1) (4 5 6 7) (0 4 7 3) (1 2 6 5) (0 1 5 4) (3 7 6 2)); } );

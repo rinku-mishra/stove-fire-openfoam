@@ -1,0 +1,9 @@
+FoamFile { version 2.0; format ascii; class dictionary; object fvOptions; }
+// Safety net only: the run log shows whether it ever activates
+limitT
+{
+    type            limitTemperature;
+    selectionMode   all;
+    min             280;
+    max             2500;
+}

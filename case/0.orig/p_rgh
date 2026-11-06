@@ -1,0 +1,10 @@
+FoamFile { version 2.0; format ascii; class volScalarField; object p_rgh; }
+#include "$FOAM_CASE/system/caseParams"
+dimensions [1 -1 -2 0 0 0 0];
+internalField uniform 0;
+boundaryField
+{
+    ".*" { type fixedFluxPressure; value $internalField; }
+    // 12 Pa chimney draught (Wiking minimum). Inlets carry fixed flows, so this sets the level only
+    flue { type prghTotalHydrostaticPressure; p0 uniform -12; gamma 1; value $internalField; }
+}

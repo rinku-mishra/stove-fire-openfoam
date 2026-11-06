@@ -1,0 +1,40 @@
+FoamFile { version 2.0; format ascii; class dictionary; object caseParams; }
+// Wiking Miro 3 at nominal burn. D = Wiking data, E = estimated from the stove, A = assumption.
+
+// ---------------- Fuel (D) ------------------------------------------------------
+// 4.9 kW at 78 % -> 6.28 kW fuel power. 1.2 kg wood per 54 min (0.37 g/s) at
+// 12-18 % moisture (15 % used) -> 0.056 g/s of steam leaves the wood with the gases.
+// Wood gases are represented by methane carrying the same heat (6.28 kW / 50 MJ/kg).
+// Per kg of oxygen, methane releases 12.5 MJ and wood ~13.1 MJ, so the model burns ~5 %
+// more O2 for the same heat: air demand and flue O2 are close (flue O2 slightly low);
+// flame chemistry details are not modelled.
+fuelMassFlow table
+(
+    (0    0)
+    (3    1.816e-4)     // load catches over ~3 s on the warm stove (start-up only)
+    (1000 1.816e-4)     // 0.1256 g/s CH4 + 0.056 g/s H2O
+);
+Y_fuel_CH4  0.692;
+Y_fuel_H2O  0.308;
+T_fuel      600;        // wood surface at pyrolysis temperature (~330 C, literature)
+
+// ---------------- Combustion air ------------------------------------------------
+// Total 5.0 g/s: flue gas 5.2 g/s (D) minus the 0.18 g/s that comes from the wood.
+// Split between the three inlets is not published (A): most through the airwash
+// (single lever, mainly secondary at nominal burn), some through the grate, rest
+// through the four back-plate holes.
+mAirwash   3.6e-3;
+mPrimary   0.6e-3;
+mTertiary  0.8e-3;
+T_air      293;         // all air enters at room temperature (no preheating modelled)
+
+// ---------------- Walls: steady conduction through the stove body ---------------
+T_room     293;
+h_out      10;          // steel firebox -> convection mantle / outer skin -> room (A)
+t_verm  0.03;  k_verm  0.20;   // vermiculite plates (A: 30 mm, k at ~500 C)
+t_steel 0.004; k_steel 50;     // steel body (A: 4 mm)
+// Walls carry no thermal mass in this BC: under-relaxation (0.003 per time step) spreads the
+// approach to the steady wall temperature over ~1 s; needed for stability because the
+// radiation balance at a wall is ~13x stiffer than conduction through one gas cell.
+h_glass    20;          // glass outer face: convection + radiation to the room
+t_glass 0.004; k_glass 1.4;    // ceramic glass

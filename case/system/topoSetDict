@@ -1,0 +1,48 @@
+FoamFile { version 2.0; format ascii; class dictionary; object topoSetDict; }
+// Patch layout of the Miro 3 firebox. Face normals point out of the gas.
+actions
+(
+    { name w0; type faceSet; action new; source patchToFace; patch walls; }
+
+    // front glass in the door (31 x 43 cm visible glass)
+    { name glassF; type faceSet; action new; source boxToFace; box (-0.155 -0.01 0.02) (0.155 0.006 0.45); }
+    { name glassF; type faceSet; action subset; source faceToFace; set w0; }
+    { name glassF; type faceSet; action subset; source normalToFace; normal (0 -1 0); cos 0.9; }
+    // side windows on the side plates (11 cm wide, same height as the front glass)
+    { name glassL; type faceSet; action new; source boxToFace; box (-0.2 0.02 0.02) (-0.17 0.13 0.45); }
+    { name glassL; type faceSet; action subset; source faceToFace; set w0; }
+    { name glassL; type faceSet; action subset; source normalToFace; normal (-1 0 0); cos 0.9; }
+    { name glassR; type faceSet; action new; source boxToFace; box (0.17 0.02 0.02) (0.2 0.13 0.45); }
+    { name glassR; type faceSet; action subset; source faceToFace; set w0; }
+    { name glassR; type faceSet; action subset; source normalToFace; normal (1 0 0); cos 0.9; }
+    // airwash: slot between the glass and the steel deflector bar, blowing down the glass
+    { name awF; type faceSet; action new; source boxToFace; box (-0.15 -0.01 0.44) (0.15 0.0155 0.46); }
+    { name awF; type faceSet; action subset; source faceToFace; set w0; }
+    { name awF; type faceSet; action subset; source normalToFace; normal (0 0 1); cos 0.9; }
+    // primary air: grate in the floor, front centre
+    { name primF; type faceSet; action new; source boxToFace; box (-0.07 0.03 -0.01) (0.07 0.15 0.005); }
+    { name primF; type faceSet; action subset; source faceToFace; set w0; }
+    // four air holes in the back plate, ~16 cm above the floor, evenly spaced
+    { name tertF; type faceSet; action new; source boxToFace; box (-0.052 0.26 0.154) (-0.040 0.28 0.166); }
+    { name tertF; type faceSet; action add;    source boxToFace; box (-0.023 0.26 0.154) (-0.011 0.28 0.166); }
+    { name tertF; type faceSet; action add;    source boxToFace; box ( 0.008 0.26 0.154) ( 0.020 0.28 0.166); }
+    { name tertF; type faceSet; action add;    source boxToFace; box ( 0.044 0.26 0.154) ( 0.056 0.28 0.166); }
+    { name tertF; type faceSet; action subset; source faceToFace; set w0; }
+    { name tertF; type faceSet; action subset; source normalToFace; normal (0 1 0); cos 0.9; }
+
+    // bare steel: everything above the lining (ceiling, upper walls, rear wall around the
+    // collar), the steel above the door and the deflector bar
+    { name stF; type faceSet; action new; source boxToFace; box (-1 -1 0.40) (1 1 1); }
+    { name stF; type faceSet; action add;    source boxToFace; box (-1 0.275 -1) (1 1 1); }
+    { name stF; type faceSet; action add;    source boxToFace; box (-1 -1 0.37) (1 0.04 1); }
+    { name stF; type faceSet; action add;    source boxToFace; box (-1 -1 -1) (1 0.0005 1); }   // door frame round the glass
+    { name stF; type faceSet; action subset; source faceToFace; set w0; }
+    { name stF; type faceSet; action subtract; source faceToFace; set glassF; }
+    { name stF; type faceSet; action subtract; source faceToFace; set glassL; }
+    { name stF; type faceSet; action subtract; source faceToFace; set glassR; }
+    { name stF; type faceSet; action subtract; source faceToFace; set awF; }
+
+    // wood: gases leave the upward-facing (flame-heated) half of each log
+    { name fuelF; type faceSet; action new; source patchToFace; patch logs; }
+    { name fuelF; type faceSet; action subset; source normalToFace; normal (0 0 -1); cos 0.2; }
+);

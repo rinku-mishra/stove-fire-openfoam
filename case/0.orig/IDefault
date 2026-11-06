@@ -1,0 +1,5 @@
+FoamFile { version 2.0; format ascii; class volScalarField; object IDefault; }
+#include "$FOAM_CASE/system/caseParams"
+dimensions [1 0 -3 0 0 0 0];
+internalField uniform 0;
+boundaryField { ".*" { type greyDiffusiveRadiation; value uniform 0; } }

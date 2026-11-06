@@ -1,0 +1,13 @@
+FoamFile { version 2.0; format ascii; class dictionary; object createPatchDict; }
+pointSync false;
+patches
+(
+    { name glass;      patchInfo { type wall;  } constructFrom set; set glassF; }
+    { name sideGlassL; patchInfo { type wall;  } constructFrom set; set glassL; }
+    { name sideGlassR; patchInfo { type wall;  } constructFrom set; set glassR; }
+    { name airwash;    patchInfo { type patch; } constructFrom set; set awF; }
+    { name primary;    patchInfo { type patch; } constructFrom set; set primF; }
+    { name tertiary;   patchInfo { type patch; } constructFrom set; set tertF; }
+    { name steel;      patchInfo { type wall;  } constructFrom set; set stF; }
+    { name fuel;       patchInfo { type patch; } constructFrom set; set fuelF; }
+);

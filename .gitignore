@@ -1,0 +1,13 @@
+# OpenFOAM run output (all regenerable)
+case/0/
+case/[1-9]*/
+case/0.[0-9]*/
+case/processor*/
+case/postProcessing/
+case/constant/polyMesh/
+case/constant/extendedFeatureEdgeMesh/
+case/constant/triSurface/*.eMesh
+case/log.*
+case/*.foam
+.DS_Store
+._*
