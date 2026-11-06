@@ -8,7 +8,7 @@ the glass, the lining and the chimney are all resolved in time.
 
 *Left: the flame as seen through the glass. Right: temperature and gas flow in a slice through the middle of the stove. Fresh air comes down along the glass, the hot gas passes the front edge of the baffle and turns back before it leaves for the chimney.*
 
-* Stove: Wiking Miro 3, 4.9 kW, three logs of 8 x 24 cm, 12 Pa chimney draught
+* Stove: Wiking, 4.9 kW, three logs of 8 x 24 cm, 12 Pa chimney draught
 * Solver: `fireFoam`, LES (k-equation), eddy-dissipation combustion, fvDOM radiation
 * Walls: conduction through vermiculite, steel and ceramic glass to a 20 °C room
 * Mesh: `blockMesh` + `snappyHexMesh`, 7.5 mm cells (113k)
